@@ -1,3 +1,495 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>gyuree</title></head>
-<body style="font-family:system-ui;display:grid;place-items:center;height:100vh;margin:0">준비 중입니다</body></html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>규리 수면교육 2주 기록</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #FFFFFF;
+  --text: #1F1E1D;
+  --text-2: #6E6D68;
+  --line: #E8E6DF;
+  --chip: #F1F0EB;
+  --mark: #C7C5BB;
+  --grid: #EEEDE8;
+  --axis: #B8B6AD;
+  --ref: #9C9A92;
+  --main: #FFBF00;          /* permanent yellow */
+  --main-edge: #A87400;     /* 흰 배경에서 노랑 마크의 윤곽 (4.07:1) */
+  --main-tint: #FFF2CC;
+  --main-ink: #6B4C00;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #1F1E1D;
+    --text: #ECEBE6;
+    --text-2: #A5A39B;
+    --line: #3A3936;
+    --chip: #2C2B28;
+    --mark: #5E5C56;
+    --grid: #33322F;
+    --axis: #6E6C66;
+    --ref: #8A8880;
+    --main: #FFBF00;
+    --main-edge: #FFD24D;
+    --main-tint: #3A3215;
+    --main-ink: #FFD95A;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  font-size: 16px; line-height: 1.65; word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+}
+
+/* 탭: 넓은 화면은 왼쪽, 좁은 화면은 위 */
+.shell { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; padding: 0 24px; }
+.tabs { position: sticky; top: 24px; align-self: start; margin-top: 56px; display: flex; flex-direction: column; gap: 2px; }
+.tabs a {
+  display: block; padding: 7px 12px; border-radius: 8px; color: var(--text-2);
+  text-decoration: none; font-size: 14px; line-height: 1.4;
+}
+.tabs a[aria-current="page"] { background: var(--main-tint); color: var(--main-ink); font-weight: 600; box-shadow: inset 3px 0 0 var(--main); }
+.tabs a:focus-visible { outline: 2px solid var(--main-edge); outline-offset: 2px; }
+.doc { max-width: 720px; padding: 56px 0 80px; min-width: 0; }
+
+/* 문서 본문 */
+h1 { font-size: 32px; line-height: 1.25; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em; }
+h2 { font-size: 22px; line-height: 1.35; font-weight: 700; margin: 36px 0 12px; letter-spacing: -0.01em; }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 24px; }
+li { margin: 0 0 4px; padding-left: 2px; }
+li::marker { color: var(--text-2); }
+strong { font-weight: 600; }
+.byline { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 0 0 8px; color: var(--text-2); font-size: 14px; }
+.chip { display: inline-block; padding: 1px 8px; border-radius: 6px; background: var(--chip); color: var(--text); font-size: 14px; }
+.chip.mention { color: var(--main-ink); background: var(--main-tint); }
+
+figure { margin: 16px 0 16px; }
+figure svg { display: block; width: 100%; height: auto; }
+figure svg text { font-family: inherit; }
+figcaption { font-size: 13px; color: var(--text-2); margin-top: 8px; }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.55; }
+th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; border-bottom: 1px solid var(--axis); }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0 16px; }
+.table-wrap table { min-width: 560px; }
+
+/* SVG 색: 테마 토큰 */
+.c-title { fill: var(--text); font-weight: 600; }
+.c-sub, .c-lbl { fill: var(--text-2); }
+.c-ink { fill: var(--text); }
+.c-grid { stroke: var(--grid); }
+.c-axis { stroke: var(--axis); }
+.c-ref { stroke: var(--ref); stroke-dasharray: 5 4; }
+.c-mark { fill: var(--mark); }
+.c-ring { fill: none; stroke: var(--mark); stroke-width: 2; }
+.c-main { fill: var(--main); }
+.c-line-edge { display: none; }
+.c-line { fill: none; stroke: var(--main); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.c-band { fill: var(--main-tint); }
+.c-box { fill: none; stroke: var(--axis); stroke-width: 1.25; }
+
+@media (max-width: 900px) {
+  .shell { display: block; padding: 0; }
+  .tabs {
+    position: sticky; top: 0; z-index: 5; margin: 0; flex-direction: row; gap: 4px;
+    padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--line);
+  }
+  .tabs a[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--main); }
+  .doc { padding: 28px 20px 64px; }
+  h1 { font-size: 28px; }
+  figure .scroll svg { min-width: 600px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="tabs" aria-label="탭">
+    <a href="#summary" id="tab-summary">공유용 요약</a>
+    <a href="#notes" id="tab-notes">스피커노트</a>
+  </nav>
+
+  <main class="doc" id="summary-view">
+    <h1>규리 수면교육 2주 기록</h1>
+    <p class="byline"><span class="chip">Nov 15, 2026</span> · <span class="chip mention">@Minwoo Choi</span></p>
+
+    <h2>개요</h2>
+    <ul>
+      <li><strong>기간:</strong> 2026.10.31–11.11 (수면교육 3–14일차, 생후 44–55일)</li>
+      <li><strong>기록:</strong> 낮잠·밤잠 입면 39회, 분 단위 손글씨 일지</li>
+      <li><strong>결과:</strong> 평균 입면 12.1분 → 8.6분, 깨시 50분 → 75분</li>
+      <li><strong>남은 과제:</strong> 밤중에 깼을 때의 대처</li>
+    </ul>
+
+    <h2>한눈에 보기</h2>
+    <figure>
+      <div class="scroll" id="chart-week"></div>
+      <figcaption>손글씨 수면일지 · 입면 시간이 적힌 39회 (동그라미 숫자 기준)</figcaption>
+    </figure>
+    <ul>
+      <li>깨시: 3일차 50분 → 12일차 일평균 75분, 지금은 1시간 10–20분</li>
+      <li>입면 = 눕힌 뒤 잠들기까지. 토닥임·젖물잠 회차는 제외</li>
+    </ul>
+
+    <h2>기록 방법과 범위</h2>
+    <p>회차마다 잠 깬 시각·눕힌 시각·입면 소요시간 기록, 그 사이 2–5분 간격으로 관찰.</p>
+    <ul>
+      <li><strong>관찰 항목:</strong> 울음 강도(약·중·강), 표정, 하품, 팔다리 움직임</li>
+      <li><strong>그날의 변수:</strong> 응가·트림, 첫째 하리, 관리사님, 재운 장소</li>
+      <li><strong>집계에서 뺀 회차:</strong> 민우가 토닥여 재운 낮잠 2회, 젖물잠 1회, 잠든 시각이 불분명한 3회</li>
+      <li><strong>기록이 없는 날:</strong> 1–2일차, 9일차(11.06), 13일차(11.10). 4일차(11.01)는 밤잠만 기록</li>
+    </ul>
+    <p>입면 시간은 일지의 동그라미 숫자 기준. 숫자 없는 11.03 밤잠 1회만 기록 시각으로 계산.</p>
+
+    <h2>수면의식의 변화</h2>
+    <p>기본 틀(기저귀 → 스와들업 → 마사지 → 자장가 → 인사)은 그대로 유지.</p>
+    <figure>
+      <div class="scroll" id="chart-routine"></div>
+      <figcaption>수면의식 변화 · 3·5·6·7일차</figcaption>
+    </figure>
+    <p>자주 부른 노래: 마사지 땐 ‘한국을 빛낸 100명의 위인들’, 안아 줄 땐 ‘과수원길’.</p>
+
+    <h2>깨시 찾기</h2>
+    <figure>
+      <div class="scroll" id="chart-wake"></div>
+      <figcaption>손글씨 수면일지 · 잠 깬 시각과 눕힌 시각이 모두 적힌 25회 (10.31–11.11)</figcaption>
+    </figure>
+    <ul>
+      <li><strong>3일차:</strong> 깨시 50분에 맞춘 낮잠5가 5분 만에 입면 → ‘먹 → 놀 → 잠’ 순서로 수유 종료·수면의식 시작 시각을 역산</li>
+      <li><strong>7일차:</strong> 낮잠 1–3은 20–25분, 낮잠4만 3분 → 너무 일찍 눕힌 건지 의심</li>
+      <li><strong>11–12일차:</strong> 졸린 신호를 기다려 87분·79분에 눕힌 낮잠 모두 3분 만에 입면 → 지금은 깨시 1시간 10–20분</li>
+    </ul>
+    <figure>
+      <div class="scroll" id="chart-scatter"></div>
+      <figcaption>손글씨 수면일지 · 깨시와 입면 시간이 모두 적힌 25회</figcaption>
+    </figure>
+    <p>단, 70분 이상 7회는 모두 2주차 → 깨시 효과인지 적응 효과인지는 아직 불분명.</p>
+
+    <h2>입면 소요시간 추이</h2>
+    <p>1주차 3–25분으로 들쑥날쑥 → 2주차 대부분 10분 안팎.</p>
+    <figure>
+      <div class="scroll" id="chart-onset"></div>
+      <figcaption>손글씨 수면일지 · 입면 시간이 적힌 39회 (10.31–11.11, 동그라미 숫자 기준)</figcaption>
+    </figure>
+
+    <h2>울음의 변화</h2>
+    <p>울음은 남았지만 짧고 약해짐. 일지 표현도 달라짐.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:50%">1주차 일지</th><th style="width:50%">2주차 일지</th></tr></thead>
+      <tbody>
+        <tr><td>“들은 중 제일로 강강강 강성울음이었다” (10.31 밤잠)</td><td>“강성울음 없이” (11.07 낮잠1·3)</td></tr>
+        <tr><td>“생전 처음 들어보는 울음소리” (11.04 밤잠)</td><td>“확실한 잠울음이어서 마음이 아프지는 않다” (11.07 낮잠4)</td></tr>
+        <tr><td>“불타는 고구마 울음… 제일 강함” (11.04 낮잠3)</td><td>“웬걸 3분 만에 스스로 입면을 했다” (11.08 낮잠2)</td></tr>
+        <tr><td>“오늘은 모든 입면이 어렵네” (11.04 낮잠3)</td><td>“울지 않고 바로 입면” (11.09 낮잠1)</td></tr>
+      </tbody>
+    </table></div>
+    <p>2주차부터 울음을 ‘졸려서 우는 잠울음’으로 알아듣게 되어 기다리기가 수월해짐.</p>
+
+    <h2>어려웠던 입면의 원인과 대처</h2>
+    <p>어려웠던 입면은 대부분 깨시·배·건드림 중 하나가 원인.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:34%">상황</th><th style="width:36%">대처</th><th style="width:30%">그 뒤</th></tr></thead>
+      <tbody>
+        <tr><td>깨시를 넘겨 과피곤 (10.31 밤 목욕이 길어짐, 11.04 새벽)</td><td>목욕·수유를 앞당기고, 밤잠도 수면의식을 생략하지 않기</td><td>1주차엔 20분 걸린 밤잠이 2번, 2주차 밤잠은 6–13분</td></tr>
+        <tr><td>너무 일찍 눕혔다고 느낌 (11.04 낮잠3: 깨시 51분, 입면 25분)</td><td>졸린 신호가 없으면 조금 더 놀리면서 깨시를 1시간 10–20분까지 늘림</td><td>깨시 79·87분에 눕힌 낮잠은 둘 다 3분 만에 입면</td></tr>
+        <tr><td>배가 불편함 (응가·방구, 트림을 못 함, 수유 뒤 게움)</td><td>트림시키고 세워 안기, 응가를 처리한 뒤 수면의식 다시</td><td>응가 뒤 눕힌 11.05 낮잠1은 한 번도 안 울고 입면</td></tr>
+        <tr><td>잠든 줄 알고 건드려 깨움 (이불 덮다 깸, 층간 소음)</td><td>덮는 건 눕힐 때 바로, 잠든 뒤엔 손대지 않기</td><td>11.03 일지에 격렬한 버둥이 줄었다고 기록</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>환경과 마음가짐</h2>
+    <p>같은 장소·같은 순서를 지킬수록, 울음을 잠울음으로 읽을수록 수월해짐.</p>
+    <ul>
+      <li><strong>안쓰러울 땐 루틴 안에서 안아 주기:</strong> 안아 재우는 대신 11.02부터 ‘꼭 안고 자장가 2번’을 루틴에 포함</li>
+      <li><strong>같은 장소, 같은 어둠:</strong> 어두운 안방·같은 순서일 때 수월. 장소가 바뀌고 밝았던 11.05 저녁 낮잠(관리사님 계신 날)은 울음이 더 셈</li>
+      <li><strong>첫째 하리와 함께:</strong> ‘얼렁뚱땅’ 수면의식에도 5분 만에 입면한 날 있음(11.02). 하리 기침·말소리에 깨기도 함(11.05)</li>
+      <li><strong>잠울음 읽기:</strong> 느리고 늘어지는 울음은 잠울음으로 보고 기다림. 12일차(11.09)부터 ‘혼자 잠들려고 애쓰는 중’으로 보게 됨</li>
+    </ul>
+
+    <h2>같은 밤잠, 3일차와 14일차</h2>
+    <p>준비가 달라지자 같은 밤잠 입면이 약 20분 → 10분.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:16%"></th><th style="width:42%">3일차 밤 (10.31)</th><th style="width:42%">14일차 밤 (11.11)</th></tr></thead>
+      <tbody>
+        <tr><td>준비</td><td>목욕이 길어져 깨시를 넘김, 피곤한 채로 수유하다 그대로 잠듦</td><td>목욕·터미타임·수유(20분 이내) 뒤 깨시 1시간 15분에 눕힘</td></tr>
+        <tr><td>수면의식</td><td>눕힌 지 10분 안에 깨서 수면의식 없이 다시 재움, 기저귀도 젖어 있었음</td><td>첫째 없이 여유 있게 노래 부르며 온몸 쓰다듬기</td></tr>
+        <tr><td>울음</td><td>얼굴이 빨개질 만큼 강강강 울음, 울다 게우기까지</td><td>약·중 울음, 한 번 울부짖고 잠듦</td></tr>
+        <tr><td>입면까지</td><td>깬 채로 약 20분</td><td>10분</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>함께 이야기하고 싶은 것</h2>
+    <p>가장 급한 건 밤중 깸 대처 기준.</p>
+    <ol>
+      <li><strong>밤중에 깼을 때:</strong> 12일차 밤(11.09) 40분 자고 깨서 목이 쉴 만큼 울음. 잠울음으로 보고 기다릴지, 안아 줘도 될지?</li>
+      <li><strong>40분에서 끊기는 낮잠:</strong> 14일차(11.11)에도 낮잠 두 번이 40분. 8일차(11.05)엔 잠을 이어 보려 10분 정도 세게 울리기도 함</li>
+      <li><strong>배고픔인지 잠울음인지:</strong> 수유 1시간 남짓에 세게 울 때 구분이 어려움(11.04 새벽, 11.09 밤)</li>
+      <li><strong>고개를 반대로 돌리는 행동:</strong> 눕히면 엄마 반대쪽으로 고개를 돌림. 편한 방향인지, 거절 신호인지?(11.01, 11.02, 11.05)</li>
+      <li><strong>깨시 1시간 10분 vs 20분:</strong> 지금은 1시간 20분, 울음이 길어 1시간 10분도 고민 중</li>
+    </ol>
+
+    <h2>마무리</h2>
+    <ul>
+      <li><strong>가장 큰 변수:</strong> 깨시 지키기</li>
+      <li><strong>울음을 줄인 것:</strong> 같은 루틴, 같은 환경</li>
+      <li><strong>남은 숙제:</strong> 밤중 깸 대처</li>
+    </ul>
+    <p>14일차(11.11) 일지 마지막 문장: “이전에는 규리가 도대체 언제 자나 그것만 신경 썼다면, 지금은 규리가 깨어 있는 시간 자체가 굉장히 소중하다.”</p>
+  </main>
+
+  <main class="doc" id="notes-view" hidden>
+    <h1>스피커노트</h1>
+    <p>화상회의에서 ‘공유용 요약’ 탭을 위에서부터 내려가며 보여 주는 순서에 맞췄습니다. 섹션마다 1분 안팎 분량이에요.</p>
+
+    <h2>개요</h2>
+    <p>안녕하세요. 오늘은 둘째 규리의 수면교육을 2주 가까이 하면서 써 온 수면일지를 정리해서 공유드리려고 해요. 어떤 방식으로 해 왔는지, 상황마다 어떻게 대처했는지, 그 결과 규리가 어떻게 잠들게 됐는지를 순서대로 말씀드릴게요.</p>
+    <p>기록은 수면교육 3일차인 10월 31일부터 14일차인 11월 11일까지이고, 그동안 규리는 생후 44일에서 55일이 됐어요. 낮잠과 밤잠마다 눕힌 시각, 울음의 강도, 잠들기까지 걸린 시간을 분 단위로 손으로 적었고, 오늘 보여드리는 숫자는 모두 그 일지에서 옮긴 거예요. 마지막에 아직 헷갈리는 점들을 모아 뒀는데, 그 부분은 꼭 의견을 듣고 싶어요.</p>
+
+    <h2>한눈에 보기</h2>
+    <p>결론부터 말씀드리면, 2주 동안 잠드는 데 걸리는 시간은 짧아지고 깨어 있는 시간은 길어졌어요.</p>
+    <p>1주차, 그러니까 3일차부터 8일차까지는 입면 21번의 평균이 12.1분이었고, 2주차인 10일차부터 14일차까지는 18번 평균 8.6분이었어요. 10분 안에 잠든 비율도 52%에서 83%까지 올랐고, 20분 넘게 걸린 입면은 1주차에 다섯 번 있었는데 2주차에는 한 번도 없었어요.</p>
+    <p>깨시는 처음에 50분으로 잡았는데, 지금은 1시간 10분에서 20분 사이로 보고 있어요. 참고로 이 숫자는 일지에 적은 입면 시간 기준이고, 토닥여서 재웠거나 젖물잠으로 재운 회차처럼 방식이 달랐던 건 뺐어요.</p>
+
+    <h2>기록 방법과 범위</h2>
+    <p>잠에서 깬 시각과 눕힌 시각을 적어서 깨시를 계산했고, 눕힌 뒤에는 2분에서 5분 간격으로 울음 강도를 약·중·강으로 나눠 적으면서 표정, 하품, 팔다리 움직임도 같이 적었어요. 그날 응가를 했는지, 첫째 하리가 옆에 있었는지, 관리사님이 계셨는지, 어디서 재웠는지도 함께 메모했고요.</p>
+    <p>입면 시간이 적힌 건 모두 39번이에요. 민우가 토닥여서 재운 낮잠 두 번, 너무 졸려서 젖물잠으로 재운 한 번, 잠든 시각이 확실하지 않은 세 번은 집계에서 뺐어요. 1, 2일차와 9일차, 13일차는 기록이 없고, 4일차는 밤잠만 적혀 있어서 그 부분은 감안해서 봐 주시면 좋겠어요.</p>
+
+    <h2>수면의식의 변화</h2>
+    <p>수면의식은 큰 틀은 그대로 두고 조금씩 다듬었어요. 3일차에는 기저귀, 스와들업, 배와 다리 마사지, 자장가, 인사 순서로 했고, 오후 낮잠부터는 백색소음을 같이 틀었어요.</p>
+    <p>5일차에 하나를 더했는데요, 50일도 안 된 아기가 낑낑대는 걸 보니 안쓰러운 마음이 너무 커서, 차라리 루틴 안에 ‘꼭 안고 자장가 두 번’을 넣었어요. 그날 낮잠에서는 강성울음이 한 번도 없었어요. 같은 날 저녁부터는 잠든 것 같아 이불을 덮다가 깨운 적이 있어서, 덮는 건 눕힐 때 바로 하기로 했어요.</p>
+    <p>6일차 밤에는 말을 걸거나 토닥이지 않고 옆에서 지켜보기만 하면서 규리가 어떻게 잠드는지 관찰했어요. 7일차부터는 밤잠 전용으로 목욕, 로션 마사지, 터미타임을 앞에 붙였어요. 마사지할 때는 ‘한국을 빛낸 100명의 위인들’을, 안아 줄 때는 ‘과수원길’을 자주 불러 줬어요.</p>
+
+    <h2>깨시 찾기</h2>
+    <p>가장 크게 배운 건 깨시였어요. 3일차에 깨시를 50분으로 재고, 그 시각에 맞춰 수유를 끝내고 수면의식을 시작했더니 낮잠5가 5분 만에 잠들었어요. 그때부터 ‘먹, 놀, 잠’ 순서로 수유 끝나는 시각과 수면의식 시작 시각을 거꾸로 계산하기 시작했어요.</p>
+    <p>7일차에는 낮잠 세 번이 20분 넘게 걸렸는데 네 번째는 3분 만에 잠들어서, 그동안 너무 빨리 눕혀서 떼를 쓴 건가 싶었어요. 사실 그날은 전날 밤에 2시간 가까이 운 여파도 있었던 것 같아요.</p>
+    <p>11일차, 12일차에는 졸린 신호가 안 보이면 조금 더 놀게 두었는데, 1시간 20분 전후에 눕힌 낮잠 두 번이 둘 다 3분 만에 잠들었어요. 그래서 지금은 깨시를 1시간 10분에서 20분 정도로 보고 있어요. 그래프의 회색 점이 회차별 깨시, 노란 선이 하루 평균이에요.</p>
+    <p>아래 점 그래프는 깨시와 입면 시간을 회차별로 겹쳐 본 거예요. 70분 넘게 깨어 있다가 눕힌 일곱 번 중 여섯 번이 10분 안에 잠들었어요. 다만 그 일곱 번이 전부 2주차라서, 깨시 덕분인지 2주 동안 익숙해진 덕분인지는 아직 구분이 어려워요.</p>
+
+    <h2>입면 소요시간 추이</h2>
+    <p>그래프에서 점 하나가 입면 한 번인데, 채워진 점은 낮잠, 빈 원은 밤잠과 밤중이고, 노란 선이 주차별 평균이에요. 1주차에는 3분에 잠든 날도 있고 25분 걸린 날도 있어서 들쑥날쑥했어요. 특히 11월 4일이 튀는데, 전날 밤에서 새벽으로 넘어가는 시간에 과피곤 상태로 2시간 가까이 울었던 다음 날이에요.</p>
+    <p>2주차에는 대부분 10분 안팎으로 모였고, 점선인 20분을 넘긴 입면은 한 번도 없었어요. 가장 오래 걸린 게 18분이었어요. 9일차와 13일차는 기록이 없는 날이에요.</p>
+
+    <h2>울음의 변화</h2>
+    <p>숫자만큼 달라진 게 일지에 쓴 표현이에요. 왼쪽이 1주차, 오른쪽이 2주차에 제가 쓴 문장들이에요.</p>
+    <p>1주차에는 ‘강강강 강성울음’, ‘불타는 고구마 울음’ 같은 표현이 많았고, 7일차 밤에는 생전 처음 듣는 울음소리에 깜짝 놀라기도 했어요. 2주차에는 ‘강성울음 없이’라는 말을 자주 적었어요.</p>
+    <p>울음이 완전히 없어진 건 아니지만, 짧아지고 약해졌고, 무엇보다 제가 그 울음을 ‘졸려서 우는 잠울음’으로 알아듣게 되면서 마음이 덜 아팠어요.</p>
+
+    <h2>어려웠던 입면의 원인과 대처</h2>
+    <p>입면이 어려웠던 날을 돌아보면 대부분 이유가 있었어요.</p>
+    <p>첫 번째는 깨시를 넘겨서 과피곤해진 경우예요. 3일차 밤에는 목욕을 너무 오래 시켜서 깨시를 넘겼고, 수유하다 그대로 잠들었다가 10분 만에 깨서 아주 세게 울었어요. 그 뒤로는 목욕과 수유를 앞당기고, 밤잠도 수면의식을 빼먹지 않으려고 했어요. 2주차 밤잠 입면은 6분에서 13분이었어요.</p>
+    <p>두 번째는 반대로 너무 일찍 눕혔다고 느낀 경우예요. 졸린 신호가 안 보이면 조금 더 놀게 두면서 깨시를 늘렸어요.</p>
+    <p>세 번째는 배가 불편할 때예요. 응가, 방귀, 트림을 못 한 날은 확실히 더 힘들어했고, 트림을 시키고 세워 안거나 응가를 처리한 뒤에 다시 수면의식을 했어요. 8일차 첫 낮잠은 응가를 푸짐하게 하고 눕혔더니 한 번도 안 울고 잠들었어요.</p>
+    <p>마지막은 잠든 줄 알고 건드려서 깨운 경우예요. 이불을 덮다가, 또 층간 소음에 깬 적이 있어서, 덮는 건 눕힐 때 하고 잠든 뒤에는 손대지 않기로 했어요.</p>
+
+    <h2>환경과 마음가짐</h2>
+    <p>환경과 제 마음가짐도 영향이 컸어요. 안쓰러울 때는 루틴을 깨고 안아 재우는 대신, 루틴 안에 안아 주는 시간을 넣었어요.</p>
+    <p>장소와 밝기도 중요했어요. 제가 데리고 어두운 안방에서 같은 순서로 재울 때가 확실히 편했고, 관리사님이 계신 날 재우는 장소가 바뀌고 밝았던 8일차 저녁 낮잠은 울음이 더 셌어요.</p>
+    <p>첫째 하리랑 같이 있을 때는 수면의식이 얼렁뚱땅 되기도 했는데, 의외로 5분 만에 잠든 날도 있었어요. 다만 하리가 기침하거나 말을 걸면 규리가 잠들려다 깨기도 했어요. 그리고 처음엔 울음이 그저 짠했는데, 12일차쯤부터는 ‘혼자 잠들려고 애쓰는 중’이라고 생각하게 됐어요. 그렇게 보니 대견해 보이더라고요.</p>
+
+    <h2>같은 밤잠, 3일차와 14일차</h2>
+    <p>같은 ‘밤잠 입면’을 3일차와 14일차로 나란히 놓아 봤어요.</p>
+    <p>3일차 밤에는 목욕을 오래 시키다 깨시를 넘겼고, 피곤한 채로 수유하다 그대로 잠들었어요. 그런데 눕힌 지 10분 안에 깼고, 수면의식 없이 다시 재우려니 기저귀도 젖어 있었고, 규리가 얼굴이 빨개질 정도로 울다가 게우기까지 했어요. 다시 잠들 때까지 20분 정도 걸렸고, 일지에 ‘아주 실패했다’고 적은 날이에요.</p>
+    <p>14일차 밤에는 목욕, 터미타임, 수유를 마치고 깨시 1시간 15분에 맞춰 눕혔어요. 하리도 없고 시간도 여유가 있어서 노래를 많이 불러 주면서 온몸을 쓰다듬어 줬는데, 조금 울다가 한 번 크게 울부짖고 10분 만에 잠들었어요. 같은 아기, 같은 밤잠인데 준비가 달라지니 입면이 이렇게 달라졌어요.</p>
+
+    <h2>함께 이야기하고 싶은 것</h2>
+    <p>마지막으로 아직 기준이 서지 않은 부분들이에요. 이 부분은 의견을 듣고 싶어요.</p>
+    <p>첫째, 밤중에 깼을 때예요. 12일차 밤에 40분 자고 깨서 목이 쉴 만큼 울었는데, 입면할 때처럼 잠울음이라고 보고 기다려야 하는지, 안아 줘도 되는지 모르겠어요. 늘어지는 울음이 잠울음이랑 비슷해서 더 헷갈렸어요.</p>
+    <p>둘째, 낮잠이 40분 만에 끊기는 거예요. 14일차에도 낮잠 두 번이 40분이었어요. 8일차에는 잠을 이어 보려고 10분 정도 세게 울린 적도 있는데, 그게 맞는 방법인지 궁금해요.</p>
+    <p>셋째, 수유한 지 1시간 남짓밖에 안 됐는데 세게 울 때, 배고픈 건지 잠울음인지 구분이 어려워요. 넷째, 눕히면 저와 반대쪽으로 고개를 돌리는데, 편한 방향이라 그런 건지 거절 신호인지 궁금해요. 덧붙여서 깨시를 1시간 10분으로 할지 20분으로 할지도 고민 중이에요.</p>
+
+    <h2>마무리</h2>
+    <p>14일차 일지 마지막에 이렇게 적었어요. ‘이전에는 규리가 도대체 언제 자나 그것만 신경 썼다면, 지금은 규리가 깨어 있는 시간 자체가 굉장히 소중하다.’</p>
+    <p>2주를 정리해 보면, 깨시를 지키는 게 가장 큰 변수였고, 같은 루틴과 같은 환경이 울음을 줄여 줬고, 남은 숙제는 밤중에 깼을 때의 대처예요. 들어 주셔서 감사합니다. 궁금하신 점이나 조언 주실 부분 있으면 편하게 말씀해 주세요.</p>
+  </main>
+</div>
+
+<script>
+// 일지에서 옮긴 입면 기록(분). day = 수면교육 일차, w = 주차, night = 밤잠·밤중
+const ONSET = [
+  {d:'10.31',day:3,w:1,nap:'낮잠1',m:10},{d:'10.31',day:3,w:1,nap:'낮잠4',m:13},{d:'10.31',day:3,w:1,nap:'낮잠5',m:5},{d:'10.31',day:3,w:1,nap:'밤잠',m:20,night:true},
+  {d:'11.01',day:4,w:1,nap:'밤잠',m:15,night:true},{d:'11.01',day:4,w:1,nap:'밤중',m:10,night:true},
+  {d:'11.02',day:5,w:1,nap:'낮잠1',m:15},{d:'11.02',day:5,w:1,nap:'낮잠 17:11',m:6.5},{d:'11.02',day:5,w:1,nap:'낮잠 18:51',m:5},{d:'11.02',day:5,w:1,nap:'밤중 21:15',m:15,night:true},
+  {d:'11.03',day:6,w:1,nap:'낮잠1',m:6},{d:'11.03',day:6,w:1,nap:'낮잠 17:51',m:10},{d:'11.03',day:6,w:1,nap:'밤잠',m:6,night:true},
+  {d:'11.04',day:7,w:1,nap:'낮잠1',m:20},{d:'11.04',day:7,w:1,nap:'낮잠2',m:20},{d:'11.04',day:7,w:1,nap:'낮잠3',m:25},{d:'11.04',day:7,w:1,nap:'낮잠4',m:3},{d:'11.04',day:7,w:1,nap:'밤잠',m:20,night:true},
+  {d:'11.05',day:8,w:1,nap:'낮잠1',m:10},{d:'11.05',day:8,w:1,nap:'낮잠 18:40',m:15},{d:'11.05',day:8,w:1,nap:'밤잠',m:5,night:true},
+  {d:'11.07',day:10,w:2,nap:'낮잠1',m:10},{d:'11.07',day:10,w:2,nap:'낮잠3',m:10},{d:'11.07',day:10,w:2,nap:'낮잠4',m:8},{d:'11.07',day:10,w:2,nap:'밤잠',m:10,night:true},
+  {d:'11.08',day:11,w:2,nap:'낮잠2',m:3},{d:'11.08',day:11,w:2,nap:'낮잠3',m:8},{d:'11.08',day:11,w:2,nap:'낮잠4',m:15},{d:'11.08',day:11,w:2,nap:'밤잠',m:6,night:true},
+  {d:'11.09',day:12,w:2,nap:'낮잠1',m:5},{d:'11.09',day:12,w:2,nap:'낮잠2',m:10},{d:'11.09',day:12,w:2,nap:'낮잠3',m:3},{d:'11.09',day:12,w:2,nap:'낮잠4',m:18},{d:'11.09',day:12,w:2,nap:'밤잠',m:13,night:true},
+  {d:'11.11',day:14,w:2,nap:'낮잠1',m:5},{d:'11.11',day:14,w:2,nap:'낮잠2',m:5},{d:'11.11',day:14,w:2,nap:'낮잠3',m:5},{d:'11.11',day:14,w:2,nap:'낮잠4',m:10},{d:'11.11',day:14,w:2,nap:'밤잠',m:10,night:true}
+];
+// 깨시(잠 깬 시각 → 눕힌 시각, 분)와 그 회차의 입면 시간
+const WAKE = [
+  {d:'10.31',day:3,w:1,nap:'낮잠5',wake:50,m:5},{d:'11.02',day:5,w:1,nap:'낮잠 18:51',wake:54,m:5},
+  {d:'11.03',day:6,w:1,nap:'낮잠1',wake:55,m:6},{d:'11.03',day:6,w:1,nap:'낮잠 17:51',wake:69,m:10},
+  {d:'11.04',day:7,w:1,nap:'낮잠1',wake:58,m:20},{d:'11.04',day:7,w:1,nap:'낮잠2',wake:65,m:20},{d:'11.04',day:7,w:1,nap:'낮잠3',wake:51,m:25},{d:'11.04',day:7,w:1,nap:'낮잠4',wake:60,m:3},{d:'11.04',day:7,w:1,nap:'밤잠',wake:64,m:20},
+  {d:'11.05',day:8,w:1,nap:'낮잠1',wake:63,m:10},{d:'11.05',day:8,w:1,nap:'낮잠 18:40',wake:65,m:15},{d:'11.05',day:8,w:1,nap:'밤잠',wake:59,m:5},
+  {d:'11.07',day:10,w:2,nap:'낮잠1',wake:57,m:10},{d:'11.07',day:10,w:2,nap:'낮잠3',wake:60,m:10},{d:'11.07',day:10,w:2,nap:'낮잠4',wake:55,m:8},{d:'11.07',day:10,w:2,nap:'밤잠',wake:73,m:10},
+  {d:'11.08',day:11,w:2,nap:'낮잠2',wake:87,m:3},{d:'11.08',day:11,w:2,nap:'낮잠3',wake:68,m:8},{d:'11.08',day:11,w:2,nap:'낮잠4',wake:60,m:15},{d:'11.08',day:11,w:2,nap:'밤잠',wake:76,m:6},
+  {d:'11.09',day:12,w:2,nap:'낮잠2',wake:75,m:10},{d:'11.09',day:12,w:2,nap:'낮잠3',wake:79,m:3},{d:'11.09',day:12,w:2,nap:'낮잠4',wake:77,m:18},{d:'11.09',day:12,w:2,nap:'밤잠',wake:67,m:13},
+  {d:'11.11',day:14,w:2,nap:'밤잠',wake:75,m:10}
+];
+
+const lbl = d => d <= 3 ? `10.${28 + d}` : `11.${String(d - 3).padStart(2, '0')}`;
+const AXIS_DAYS = Array.from({length: 12}, (_, i) => i + 3);
+const T = (x, y, s, cls = 'c-lbl', size = 12, extra = '') => `<text class="${cls}" x="${x}" y="${y}" font-size="${size}" ${extra}>${s}</text>`;
+const put = (id, w, h, label, body) => {
+  document.getElementById(id).innerHTML = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${body}</svg>`;
+};
+
+// 한눈에 보기: 1주차 vs 2주차
+(function () {
+  const stats = [1, 2].map(w => {
+    const g = ONSET.filter(r => r.w === w);
+    return {week: w, n: g.length, mean: g.reduce((s, r) => s + r.m, 0) / g.length,
+      fast: g.filter(r => r.m <= 10).length / g.length * 100, slow: g.filter(r => r.m >= 20).length};
+  });
+  const panels = [{key: 'mean', name: '평균 입면 소요시간', max: 15}, {key: 'fast', name: '10분 안에 잠든 비율', max: 100}, {key: 'slow', name: '20분 이상 걸린 입면', max: 6}];
+  const val = (s, k) => k === 'mean' ? s.mean : k === 'fast' ? s.fast : s.slow;
+  const fmt = (k, v) => k === 'mean' ? `${v.toFixed(1)}분` : k === 'fast' ? `${Math.round(v)}%` : `${v}회`;
+  const base = 330, h = 190, bw = 64, px = i => 20 + i * 250, bx = (i, j) => px(i) + 36 + j * (bw + 30), by = (p, v) => base - v / p.max * h;
+  const title = '2주차엔 더 빨리, 더 고르게 입면';
+  let s = T(0, 22, title, 'c-title', 16) + T(0, 44, `1주차(3–8일차) ${stats[0].n}회 · 2주차(10–14일차) ${stats[1].n}회 입면 기준`, 'c-sub', 12);
+  panels.forEach((p, i) => {
+    s += T(px(i), 92, p.name, 'c-title', 13);
+    s += `<line class="c-axis" x1="${px(i)}" x2="${px(i) + 230}" y1="${base}" y2="${base}"/>`;
+    stats.forEach((st, j) => {
+      const v = val(st, p.key), y = by(p, v);
+      s += `<rect class="${st.week === 2 ? 'c-main' : 'c-mark'}" x="${bx(i, j)}" y="${y}" width="${bw}" height="${base - y}"><title>${st.week}주차 ${p.name}: ${fmt(p.key, v)}</title></rect>`;
+      s += T(bx(i, j) + bw / 2, y - 8, fmt(p.key, v), 'c-title', 15, 'text-anchor="middle"');
+      s += T(bx(i, j) + bw / 2, base + 20, `${st.week}주차`, 'c-lbl', 12, 'text-anchor="middle"');
+    });
+  });
+  put('chart-week', 760, 380, title, s);
+})();
+
+// 수면의식 변화 타임라인
+(function () {
+  const ax = 110, bx = 136, bw = 600;
+  const items = [
+    {y: 60, h: 80, date: '10.31', day: '3일차', name: '기본 루틴', a: '기저귀 → 스와들업 → 배·다리 마사지 → 자장가 → 인사', b: '오후 낮잠부터 백색소음 추가'},
+    {y: 156, h: 80, date: '11.02', day: '5일차', name: '꼭 안고 자장가 2번', a: '안쓰러운 마음을 루틴을 깨지 않고 루틴 안에서 풀기로 함', b: '저녁부터 이불은 눕힐 때 바로 덮기 · 그날 낮잠은 강성울음 없음'},
+    {y: 252, h: 80, date: '11.03', day: '6일차', name: '밤엔 옆에서 지켜보기만', a: '말 걸기·토닥임 없이 혼자 잠드는 과정을 관찰', b: '같은 날 낮잠 메모: “울음이 점점 약해지고 짧아진다”'},
+    {y: 348, h: 62, date: '11.04', day: '7일차', name: '밤잠 전용 루틴', a: '목욕 → 로션 마사지 → 터미타임 → 스와들업 → 안고 노래 → 인사', b: ''}
+  ];
+  const title = '5–7일차에 안아 주기·지켜보기·밤잠 루틴 추가';
+  let s = T(24, 32, title, 'c-title', 15);
+  s += `<line class="c-axis" x1="${ax}" x2="${ax}" y1="${items[0].y + 20}" y2="${items[3].y + 20}"/>`;
+  items.forEach(it => {
+    s += `<circle class="c-main" cx="${ax}" cy="${it.y + 20}" r="6.5"/>`;
+    s += `<rect class="c-box" x="${bx}" y="${it.y}" width="${bw}" height="${it.h}" rx="8"/>`;
+    s += T(ax - 16, it.y + 24, it.date, 'c-title', 13, 'text-anchor="end"');
+    s += T(ax - 16, it.y + 42, it.day, 'c-lbl', 11.5, 'text-anchor="end"');
+    s += T(bx + 16, it.y + 24, it.name, 'c-title', 14);
+    s += T(bx + 16, it.y + 46, it.a, 'c-ink', 13);
+    if (it.b) s += T(bx + 16, it.y + 66, it.b, 'c-lbl', 13);
+  });
+  put('chart-routine', 760, 434, title, s);
+})();
+
+// 깨시 추이
+(function () {
+  const left = 64, right = 720, y0 = 70, base = 370;
+  const x = d => left + 20 + (d - 3) / 11 * (right - left - 20);
+  const y = v => base - (v - 40) / 50 * (base - y0);
+  const days = [...new Set(WAKE.map(r => r.day))];
+  const avg = days.map(d => { const g = WAKE.filter(r => r.day === d); return {day: d, date: g[0].d, v: g.reduce((s, r) => s + r.wake, 0) / g.length}; });
+  const first = avg[0], last = avg[avg.length - 1];
+  const title = '깨시 50분 → 75분';
+  let s = T(0, 22, title, 'c-title', 16) + T(0, 44, '하루 평균(노란 선)과 회차별 깨시(회색 점), 분 · 수면교육 3–14일차', 'c-sub', 12);
+  s += `<rect class="c-band" x="${left}" y="${y(80)}" width="${right - left}" height="${y(70) - y(80)}"/>`;
+  s += T(left + 8, y(80) + 16, '지금 잡는 깨시 1시간 10–20분', 'c-lbl', 12);
+  [50, 60, 70, 80, 90].forEach(t => { s += `<line class="c-grid" x1="${left}" x2="${right}" y1="${y(t)}" y2="${y(t)}"/>` + T(left - 8, y(t) + 4, `${t}분`, 'c-lbl', 12, 'text-anchor="end"'); });
+  s += `<line class="c-axis" x1="${left}" x2="${right}" y1="${base}" y2="${base}"/>`;
+  AXIS_DAYS.forEach(d => { s += T(x(d), base + 20, lbl(d), 'c-lbl', 11, 'text-anchor="middle"'); });
+  WAKE.forEach(r => { s += `<circle class="c-mark" cx="${x(r.day)}" cy="${y(r.wake)}" r="4"><title>${r.d}: 깨시 ${r.wake}분</title></circle>`; });
+  const path = avg.map((a, i) => `${i ? 'L' : 'M'}${x(a.day)},${y(a.v)}`).join(' ');
+  s += `<path class="c-line-edge" d="${path}"/><path class="c-line" d="${path}"/>`;
+  avg.forEach(a => { s += `<circle class="c-main" cx="${x(a.day)}" cy="${y(a.v)}" r="5.5"><title>${a.date}: 하루 평균 ${Math.round(a.v)}분</title></circle>`; });
+  s += T(x(first.day) - 6, y(first.v) + 26, `${first.date} 첫 측정 ${Math.round(first.v)}분`, 'c-title', 12);
+  s += T(x(last.day) - 10, y(last.v) - 12, `${last.date} ${Math.round(last.v)}분`, 'c-title', 12, 'text-anchor="end"');
+  put('chart-wake', 760, 410, title, s);
+})();
+
+// 깨시 × 입면
+(function () {
+  const left = 64, right = 720, y0 = 76, base = 350;
+  const x = w => left + 10 + (w - 45) / 45 * (right - left - 10);
+  const y = v => base - v / 30 * (base - y0);
+  const longer = WAKE.filter(r => r.wake >= 70), shorter = WAKE.filter(r => r.wake < 70);
+  const fastL = longer.filter(r => r.m <= 10).length, fastS = shorter.filter(r => r.m <= 10).length;
+  const miss = longer.find(r => r.m > 10);
+  const offset = (r, i) => { const same = WAKE.filter(q => q.wake === r.wake && q.m === r.m).length; const k = WAKE.slice(0, i).filter(q => q.wake === r.wake && q.m === r.m).length; return (k - (same - 1) / 2) * 10; };
+  const title = '깨시 70분 이상이면 대부분 10분 안에 입면';
+  let s = T(0, 22, title, 'c-title', 16) + T(0, 44, `10분 안에 잠든 회차: 깨시 70분 이상 ${longer.length}회 중 ${fastL}회, 70분 미만 ${shorter.length}회 중 ${fastS}회`, 'c-sub', 12);
+  [0, 10, 20, 30].forEach(t => { s += `<line class="${t === 0 ? 'c-axis' : 'c-grid'}" x1="${left}" x2="${right}" y1="${y(t)}" y2="${y(t)}"/>` + T(left - 8, y(t) + 4, t === 0 ? '0' : `${t}분`, 'c-lbl', 12, 'text-anchor="end"'); });
+  s += T(left, y0 - 14, '입면 소요시간', 'c-lbl', 12);
+  [50, 60, 70, 80, 90].forEach(t => { s += T(x(t), base + 20, `${t}분`, 'c-lbl', 12, 'text-anchor="middle"'); });
+  s += T(right, base + 40, '눕히기 전 깨어 있던 시간(깨시)', 'c-lbl', 12, 'text-anchor="end"');
+  s += `<line class="c-ref" x1="${x(70)}" x2="${x(70)}" y1="${y0}" y2="${base}"/>` + T(x(70) + 6, y0 + 12, '70분 이상 →', 'c-lbl', 12);
+  s += `<line class="c-ref" x1="${left}" x2="${right}" y1="${y(10)}" y2="${y(10)}"/>`;
+  WAKE.forEach((r, i) => { s += `<circle class="${r.wake >= 70 ? 'c-main' : 'c-mark'}" cx="${x(r.wake) + offset(r, i)}" cy="${y(r.m)}" r="5"><title>${r.d} ${r.nap}: 깨시 ${r.wake}분, 입면 ${r.m}분</title></circle>`; });
+  if (miss) s += T(x(miss.wake) + 10, y(miss.m) + 4, `${miss.d} ${miss.nap} ${miss.m}분`, 'c-ink', 12);
+  put('chart-scatter', 760, 400, title, s);
+})();
+
+// 입면 소요시간 추이
+(function () {
+  const left = 64, right = 720, y0 = 70, base = 370;
+  const x = d => left + 20 + (d - 3) / 11 * (right - left - 20);
+  const y = v => base - v / 30 * (base - y0);
+  const recorded = new Set(ONSET.map(r => r.day));
+  const mean = w => { const g = ONSET.filter(r => r.w === w); return g.reduce((s, r) => s + r.m, 0) / g.length; };
+  const m1 = mean(1), m2 = mean(2);
+  const offset = (r, i) => { const same = ONSET.filter(q => q.day === r.day && q.m === r.m).length; const k = ONSET.slice(0, i).filter(q => q.day === r.day && q.m === r.m).length; return (k - (same - 1) / 2) * 11; };
+  const title = '2주차엔 20분 이상 걸린 입면 0회';
+  let s = T(0, 22, title, 'c-title', 16) + T(0, 44, '입면 소요시간(분) · 회색 점 낮잠, 빈 원 밤잠·밤중, 노란 선 주차 평균', 'c-sub', 12);
+  [10, 30].forEach(t => { s += `<line class="c-grid" x1="${left}" x2="${right}" y1="${y(t)}" y2="${y(t)}"/>` + T(left - 8, y(t) + 4, `${t}분`, 'c-lbl', 12, 'text-anchor="end"'); });
+  s += T(left - 8, base + 4, '0', 'c-lbl', 12, 'text-anchor="end"');
+  s += `<line class="c-ref" x1="${left}" x2="${right}" y1="${y(20)}" y2="${y(20)}"/>` + T(left - 8, y(20) + 4, '20분', 'c-lbl', 12, 'text-anchor="end"');
+  s += `<line class="c-axis" x1="${left}" x2="${right}" y1="${base}" y2="${base}"/>`;
+  AXIS_DAYS.forEach(d => {
+    s += T(x(d), base + 20, lbl(d), 'c-lbl', 11, 'text-anchor="middle"');
+    if (!recorded.has(d)) s += T(x(d), base + 36, '기록 없음', 'c-lbl', 10, 'text-anchor="middle"');
+  });
+  ONSET.forEach((r, i) => { s += `<circle class="${r.night ? 'c-ring' : 'c-mark'}" cx="${x(r.day) + offset(r, i)}" cy="${y(r.m)}" r="4.5"><title>${r.d} ${r.nap}: ${r.m}분</title></circle>`; });
+  s += `<line class="c-line-edge" x1="${x(3) - 16}" x2="${x(8) + 16}" y1="${y(m1)}" y2="${y(m1)}"/><line class="c-line" x1="${x(3) - 16}" x2="${x(8) + 16}" y1="${y(m1)}" y2="${y(m1)}"/>`;
+  s += `<line class="c-line-edge" x1="${x(10) - 16}" x2="${x(14) + 16}" y1="${y(m2)}" y2="${y(m2)}"/><line class="c-line" x1="${x(10) - 16}" x2="${x(14) + 16}" y1="${y(m2)}" y2="${y(m2)}"/>`;
+  s += T(x(9), y(m1) - 12, '1주차 평균', 'c-title', 12, 'text-anchor="middle"');
+  s += T(x(9), y(m2) + 22, '2주차 평균', 'c-title', 12, 'text-anchor="middle"');
+  s += T(x(7), y(25) - 14, '새벽에 2시간 가까이 운 다음 날', 'c-lbl', 12, 'text-anchor="middle"');
+  put('chart-onset', 760, 420, title, s);
+})();
+
+// 탭 전환 (#summary, #notes)
+(function () {
+  const views = {summary: document.getElementById('summary-view'), notes: document.getElementById('notes-view')};
+  const tabs = {summary: document.getElementById('tab-summary'), notes: document.getElementById('tab-notes')};
+  let current = null;
+  const show = () => {
+    const key = location.hash === '#notes' ? 'notes' : 'summary';
+    if (key === current) return;
+    current = key;
+    Object.keys(views).forEach(k => {
+      views[k].hidden = k !== key;
+      if (k === key) tabs[k].setAttribute('aria-current', 'page'); else tabs[k].removeAttribute('aria-current');
+    });
+    window.scrollTo(0, 0);
+  };
+  window.addEventListener('hashchange', show);
+  show();
+})();
+</script>
+</body>
+</html>
